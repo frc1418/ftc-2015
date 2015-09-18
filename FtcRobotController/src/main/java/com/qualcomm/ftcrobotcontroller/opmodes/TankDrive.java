@@ -8,7 +8,7 @@ public class TankDrive {
     DcMotor[] leftMotors;
     DcMotor[] rightMotors;
 
-    float motorSpeedCostant = 1;
+    float motorSpeedConstant = 1;
 
     public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors){
         this.leftMotors = leftMotors;
@@ -17,11 +17,11 @@ public class TankDrive {
 
     public void drive (float y1, float y2){
         for(DcMotor motor : leftMotors){
-            motor.setPower((y1*motorSpeedCostant));
+            motor.setPower((y1*motorSpeedConstant));
         }
 
         for(DcMotor motor : rightMotors){
-            motor.setPower((y2*motorSpeedCostant));
+            motor.setPower((y2*motorSpeedConstant));
         }
     }
 
