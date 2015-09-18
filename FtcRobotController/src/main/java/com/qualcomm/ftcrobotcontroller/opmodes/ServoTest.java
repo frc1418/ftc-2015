@@ -19,7 +19,6 @@ public class ServoTest implements Arcade.Component{
     }
     public void increase()
     {
-
         location+=.01;
     }
     public void decrease()

@@ -29,11 +29,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.reference;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -41,10 +41,11 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9IrSeeker extends OpMode {
+public class K9Line extends OpMode {
 	
 	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
-	final static double HOLD_IR_SIGNAL_STRENGTH = 0.50; // Higher values will cause the robot to follow closer
+	final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
+	final static double LIGHT_THRESHOLD = 170;
 
 	double armPosition;
 	double clawPosition;
@@ -53,12 +54,12 @@ public class K9IrSeeker extends OpMode {
 	DcMotor motorLeft;
 	Servo claw;
 	Servo arm;
-	IrSeekerSensor irSeeker;
+	LightSensor reflectedLight;
 	
 	/**
 	 * Constructor
 	 */
-	public K9IrSeeker() {
+	public K9Line() {
 
 	}
 
@@ -80,7 +81,7 @@ public class K9IrSeeker extends OpMode {
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot.
+		 *   "motor_2" is on the left side of the bot..
 		 *   
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
@@ -94,14 +95,17 @@ public class K9IrSeeker extends OpMode {
 		claw = hardwareMap.servo.get("servo_6");
 
 		// set the starting position of the wrist and claw
-		armPosition = 0.1;
+		armPosition = 0.2;
 		clawPosition = 0.25;
 
 		/*
-		 * We also assume that we have a Hitechnic IR Seeker v2 sensor
-		 * with a name of "ir_seeker" configured for our robot.
+		 * We also assume that we have a LEGO light sensor
+		 * with a name of "light_sensor" configured for our robot.
 		 */
-		irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
+		reflectedLight = hardwareMap.lightSensor.get("light_sensor");
+
+		// turn on LED of light sensor.
+		reflectedLight.enableLed(true);
 	}
 
 	/*
@@ -111,80 +115,44 @@ public class K9IrSeeker extends OpMode {
 	 */
 	@Override
 	public void loop() {
-		double angle = 0.0;
-		double strength = 0.0;
+		int reflection = 0;
 		double left, right = 0.0;
 		
 		// keep manipulator out of the way.
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
-	
+
 		/*
-		 * Do we detect an IR signal?
+		 * read the light sensor.
 		 */
-		if (irSeeker.signalDetected())  {
-			/*
-			 * Signal was detected. Follow it.
-			 */
-			
-			/*
-			 * Get angle and strength of the signal.
-			 * Note an angle of zero implies straight ahead.
-			 * A negative angle implies that the source is to the left.
-			 * A positive angle implies that the source is to the right.
-			 */
-			angle = irSeeker.getAngle();
-			strength = irSeeker.getStrength();
 
-            if (angle < -60)  {
-                /*
-                 * IR source is to the way left.
-                 * Point turn to the left.
-                 */
-                left = -MOTOR_POWER;
-                right = MOTOR_POWER;
-
-            } else if (angle < -5) {
-                // turn to the left and move forward.
-                left = MOTOR_POWER - 0.05;
-                right = MOTOR_POWER;
-            } else if (angle > 5 && angle < 60) {
-                // turn to the right and move forward.
-                left = MOTOR_POWER;
-                right = MOTOR_POWER - 0.05;
-            } else if (angle > 60) {
-                // point turn to right.
-                left = MOTOR_POWER;
-                right = -MOTOR_POWER;
-            } else if (strength < HOLD_IR_SIGNAL_STRENGTH) {
-				/*
-				 * Signal is dead ahead but weak.
-				 * Move forward towards signal
-				 */
-				left = MOTOR_POWER;
-				right = MOTOR_POWER;
-			} else {
-				/*
-				 * Signal is dead ahead and strong.
-				 * Stop motors.
-				 */
-				left = 0.0;
-				right = 0.0;
-			}
+		//reflection = reflectedLight.getLightLevel();
+		reflection = reflectedLight.getLightDetectedRaw();
+		
+		/*
+		 * compare measured value to threshold.
+		 */
+		if (reflection < LIGHT_THRESHOLD) {
+			/*
+			 * if reflection is less than the threshold value, then assume we are above dark spot.
+			 * turn to the right.
+			 */
+			left = MOTOR_POWER;
+			right = 0.0;
 		} else {
 			/*
-			 * Signal was not detected.
-			 * Shut off motors
+			 * assume we are over a light spot.
+			 * turn to the left.
 			 */
 			left = 0.0;
-			right = 0.0;
+			right = MOTOR_POWER;
 		}
 		
 		/*
 		 * set the motor power
 		 */
-		motorRight.setPower(right);
-		motorLeft.setPower(left);
+		motorRight.setPower(left);
+		motorLeft.setPower(right);
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -194,8 +162,7 @@ public class K9IrSeeker extends OpMode {
 		 */
 
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("angle", "angle:  " + Double.toString(angle));
-		telemetry.addData("strength", "sig strength: " + Double.toString(strength));
+		telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
 	}
