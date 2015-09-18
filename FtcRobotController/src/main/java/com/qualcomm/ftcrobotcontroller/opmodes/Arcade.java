@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 /**
  * Created by winterst on 9/12/15.
@@ -11,7 +12,7 @@ public class Arcade extends OpMode{
     DcMotor motorRight;
     DcMotor motorLeft;
     Drive drive;
-    Servo servo;
+    ServoController servoController;
     ServoTest servoTest;
     interface Component {
         void  doit();
@@ -23,10 +24,12 @@ public class Arcade extends OpMode{
     {
     	//motorRight = hardwareMap.dcMotor.get("motor_2");
     	//motorLeft = hardwareMap.dcMotor.get("motor_1");
-        servo = hardwareMap.servo.get("servo_1");
+        servoController = hardwareMap.servoController.get("Servo Controller 1");
+        servoController.pwmEnable();
+
     	//motorLeft.setDirection(DcMotor.Direction.REVERSE);
     	//drive = new Drive(motorRight, motorLeft);
-        servoTest = new ServoTest(servo);
+        servoTest = new ServoTest(servoController);
     }
 
     public void loop()
@@ -35,13 +38,11 @@ public class Arcade extends OpMode{
 
         if(gamepad1.a)
         {
-            System.out.println("Hello");
-            servo.setDirection(Servo.Direction.FORWARD);
+            servoTest.increase();
         }
         else if(gamepad1.b)
         {
-            System.out.println("Debug");
-            servo.setDirection(Servo.Direction.REVERSE);
+            servoTest.decrease();
         }
         servoTest.doit();
         //for( Component component: components)

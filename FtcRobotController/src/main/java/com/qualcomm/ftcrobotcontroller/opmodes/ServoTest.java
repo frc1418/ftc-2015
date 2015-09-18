@@ -1,28 +1,36 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.util.Range;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by winterst on 9/16/15.
  */
 public class ServoTest implements Arcade.Component{
-    Servo servo;
-    Servo.Direction speed;
-    public ServoTest(Servo servo)
+    ServoController servoController;
+    double location = .5;
+    DecimalFormat df;
+    public ServoTest(ServoController servoController)
     {
-        this.servo = servo;
+        this.servoController = servoController;
+
     }
-    public void moveF()
+    public void increase()
     {
 
-        speed = Servo.Direction.FORWARD;
+        location+=.01;
     }
-    public void moveR()
+    public void decrease()
     {
-        speed = Servo.Direction.REVERSE;
+        location-=.01;
     }
 
     public void doit()
     {
-        servo.setDirection(speed);
+        System.out.println(location);
+        location = Math.min(Math.max(0, location), 1);
+        servoController.setServoPosition(1,  location);
     }
 }
