@@ -31,5 +31,7 @@ public class ServoTest implements Arcade.Component{
         System.out.println(location);
         location = Math.min(Math.max(0, location), 1);
         servoController.setServoPosition(1,  location);
+        //servoController.set
+
     }
 }
