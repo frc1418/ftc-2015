@@ -3,7 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class TankDrive {
+public class TankDrive implements Component{
 
     DcMotor[] leftMotors;
     DcMotor[] rightMotors;
@@ -12,12 +12,18 @@ public class TankDrive {
 
     private float speedVariable = 1;
 
+    private float rightSpeed;
+    private float leftSpeed;
+
     public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors){
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
+
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
     }
 
-    public void drive (float rightY, float leftY){
+    public void move(float rightY, float leftY){
 
         if(reverse){
             float tmp = rightY;
@@ -28,13 +34,9 @@ public class TankDrive {
 
         }
 
-        for(DcMotor motor : leftMotors){
-            motor.setPower((leftY*speedVariable));
-        }
+        leftSpeed = (leftY*speedVariable);
 
-        for(DcMotor motor : rightMotors){
-            motor.setPower((rightY*speedVariable));
-        }
+        rightSpeed = (rightY*speedVariable);
     }
 
     public void reverse(){
@@ -49,4 +51,12 @@ public class TankDrive {
         this.speedVariable = speedVariable;
     }
 
+    public void doit(){
+        for(DcMotor motor : leftMotors){
+            motor.setPower(leftSpeed);
+        }
+        for(DcMotor motor : rightMotors){
+            motor.setPower(rightSpeed);
+        }
+    }
 }

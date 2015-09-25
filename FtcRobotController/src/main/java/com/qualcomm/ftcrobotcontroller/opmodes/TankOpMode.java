@@ -11,6 +11,8 @@ public class TankOpMode extends OpMode{
 
     TankDrive tank;
 
+    Component[] components = {tank};
+
     public void init()
     {
     	leftMotors[0] = hardwareMap.dcMotor.get("motor_2");
@@ -42,10 +44,13 @@ public class TankOpMode extends OpMode{
             tank.setSpeedVariable(speed);
         }
 
-        System.out.println("Speed: "+tank.getSpeedVariable());
+        System.out.println("Speed: " + tank.getSpeedVariable());
         telemetry.addData("Speed", tank.getSpeedVariable());
 
-        tank.drive(gamepad1.left_stick_y, gamepad1.right_stick_y);
-    }
+        tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
+        for(Component c : components){
+            c.doit();
+        }
+    }
 }
