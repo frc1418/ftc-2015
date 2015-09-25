@@ -5,13 +5,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ArcadeOpMode extends OpMode{
     DcMotor motorRight;
     DcMotor motorLeft;
     ArcadeDrive drive;
 
-    Component [] components = {drive
-    };
+    ServoController servoController;
+    NormalServo servo;
+
+    List<Component> components = new ArrayList<Component>();
 
     public void init()
     {
@@ -21,16 +26,31 @@ public class ArcadeOpMode extends OpMode{
     	motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
     	drive = new ArcadeDrive(motorRight, motorLeft);
+        components.add(drive);
+
+        servoController = hardwareMap.servoController.get("Servo Controller 1");
+        servoController.pwmEnable();
+
+        servo = new NormalServo(servoController);
+        components.add(servo);
 
     }
 
-    public void loop()
-    {
+    public void loop() {
         drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y);
 
-        for( Component component: components)
+        if(gamepad1.a)
         {
-            component.doit();
+            servo.increase();
+        }
+        else if(gamepad1.b)
+        {
+            servo.decrease();
+        }
+
+        for(int i=0; i< components.size(); i++){
+            System.out.println();
+            components.get(i).doit();
         }
     }
 

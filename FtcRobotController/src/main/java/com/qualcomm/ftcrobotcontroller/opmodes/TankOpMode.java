@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TankOpMode extends OpMode{
     DcMotor[] rightMotors = new DcMotor[1];
@@ -11,7 +13,7 @@ public class TankOpMode extends OpMode{
 
     TankDrive tank;
 
-    Component[] components = {tank};
+    List<Component> components = new ArrayList<Component>();
 
     public void init()
     {
@@ -21,6 +23,7 @@ public class TankOpMode extends OpMode{
     	leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
 
         tank = new TankDrive(leftMotors, rightMotors);
+        components.add(tank);
     }
 
     public void loop()
@@ -49,8 +52,10 @@ public class TankOpMode extends OpMode{
 
         tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
-        for(Component c : components){
-            c.doit();
+
+        for(int i=0; i< components.size(); i++){
+            System.out.println();
+            components.get(i).doit();
         }
     }
 }
