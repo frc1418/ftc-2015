@@ -2,12 +2,12 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-public class Drive implements Component
+public class ArcadeDrive implements Component
 {
     DcMotor rightMotor, leftMotor;
     float rightMotorSpeed, leftMotorSpeed;
 
-    public Drive(DcMotor rightMotor, DcMotor leftMotor)
+    public ArcadeDrive(DcMotor rightMotor, DcMotor leftMotor)
     {
         this.rightMotor = rightMotor;
         this.leftMotor = leftMotor;

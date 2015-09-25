@@ -63,7 +63,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
-    manager.register("Arcade", Arcade.class);
+    manager.register("ArcadeOpMode", ArcadeOpMode.class);
     manager.register("TankOpMode", TankOpMode.class);
 
   }
