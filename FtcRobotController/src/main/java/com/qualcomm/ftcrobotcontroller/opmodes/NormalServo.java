@@ -8,11 +8,11 @@ import java.text.DecimalFormat;
 /**
  * Created by winterst on 9/16/15.
  */
-public class ServoTest implements Arcade.Component{
+public class NormalServo implements Component{
     ServoController servoController;
     double location = .5;
     DecimalFormat df;
-    public ServoTest(ServoController servoController)
+    public NormalServo(ServoController servoController)
     {
         this.servoController = servoController;
 
