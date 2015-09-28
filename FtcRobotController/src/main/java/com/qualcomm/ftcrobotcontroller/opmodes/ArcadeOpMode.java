@@ -1,6 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.Component;
+import com.qualcomm.ftcrobotcontroller.opmodes.Component;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,6 +17,7 @@ public class ArcadeOpMode extends OpMode{
     NormalServo servo;
 
     List<Component> components = new ArrayList<Component>();
+    ArcadeDrive drive;
 
     public void init()
     {
@@ -25,13 +26,13 @@ public class ArcadeOpMode extends OpMode{
 
     	motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-    	//drive = new ArcadeDrive(motorRight, motorLeft);
-        //components.add(drive);
+    	drive = new ArcadeDrive(motorRight, motorLeft);
+        components.add(drive);
 
         servoController = hardwareMap.servoController.get("Servo Controller 1");
         servoController.pwmEnable();
 
-        //servo = new NormalServo(servoController);
+        servo = new NormalServo(servoController, 1);
         components.add(servo);
 
     }
