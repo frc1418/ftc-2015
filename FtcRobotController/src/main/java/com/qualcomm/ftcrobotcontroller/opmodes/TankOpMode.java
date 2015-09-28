@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TankOpMode extends OpMode{
-    DcMotor[] rightMotors = new DcMotor[1];
-    DcMotor[] leftMotors = new DcMotor[1];
+    DcMotor[] rightMotors = new DcMotor[2];
+    DcMotor[] leftMotors = new DcMotor[2];
 
     TankDrive tank;
 
@@ -17,10 +17,14 @@ public class TankOpMode extends OpMode{
 
     public void init()
     {
-    	leftMotors[0] = hardwareMap.dcMotor.get("motor_2");
-    	rightMotors[0] = hardwareMap.dcMotor.get("motor_1");
+    	leftMotors[0] = hardwareMap.dcMotor.get("motor_1");
+    	leftMotors[1] = hardwareMap.dcMotor.get("motor_2");
+        rightMotors[0] = hardwareMap.dcMotor.get("motor_3");
+        rightMotors[1] = hardwareMap.dcMotor.get("motor_4");
+
 
     	leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
+        leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
         tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);

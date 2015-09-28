@@ -31,15 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.K9IrSeeker;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.K9Line;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.K9TeleOp;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.NullOp;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.PushBotAuto;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.PushBotDriveTouch;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.PushBotIrSeek;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.PushBotManual;
-import com.qualcomm.ftcrobotcontroller.opmodes.reference.PushBotSquare;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
