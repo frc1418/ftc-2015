@@ -11,10 +11,11 @@ import java.text.DecimalFormat;
 public class NormalServo implements Component{
     ServoController servoController;
     double location = .5;
-    DecimalFormat df;
-    public NormalServo(ServoController servoController)
+    int port;
+    public NormalServo(ServoController servoController, int port)
     {
         this.servoController = servoController;
+        this.port = port;
 
     }
     public void increase()
@@ -30,7 +31,7 @@ public class NormalServo implements Component{
     {
         System.out.println(location);
         location = Math.min(Math.max(0, location), 1);
-        servoController.setServoPosition(1,  location);
+        servoController.setServoPosition(port,  location);
         //servoController.set
 
     }

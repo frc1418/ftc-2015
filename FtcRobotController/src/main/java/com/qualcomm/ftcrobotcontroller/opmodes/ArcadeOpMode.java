@@ -11,7 +11,6 @@ import java.util.List;
 public class ArcadeOpMode extends OpMode{
     DcMotor motorRight;
     DcMotor motorLeft;
-    ArcadeDrive drive;
 
     ServoController servoController;
     NormalServo servo;
@@ -25,19 +24,19 @@ public class ArcadeOpMode extends OpMode{
 
     	motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-    	drive = new ArcadeDrive(motorRight, motorLeft);
-        components.add(drive);
+    	//drive = new ArcadeDrive(motorRight, motorLeft);
+        //components.add(drive);
 
         servoController = hardwareMap.servoController.get("Servo Controller 1");
         servoController.pwmEnable();
 
-        servo = new NormalServo(servoController);
+        //servo = new NormalServo(servoController);
         components.add(servo);
 
     }
 
     public void loop() {
-        drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        //drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y);
 
         if(gamepad1.a)
         {
