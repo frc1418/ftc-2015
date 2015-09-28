@@ -38,7 +38,7 @@ public class ArcadeOpMode extends OpMode{
     }
 
     public void loop() {
-        //drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y);
 
         if(gamepad1.a)
         {
