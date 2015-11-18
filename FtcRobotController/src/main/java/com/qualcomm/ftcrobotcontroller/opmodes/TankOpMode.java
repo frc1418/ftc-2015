@@ -11,6 +11,8 @@ public class TankOpMode extends OpMode{
     DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
 
+    DcMotor winchMotor;
+
     TankDrive tank;
 
     List<Component> components = new ArrayList<Component>();
@@ -26,6 +28,8 @@ public class TankOpMode extends OpMode{
     	leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
         leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
+        winchMotor = hardwareMap.dcMotor.get("winch_motor");
+
         tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);
     }
@@ -36,19 +40,11 @@ public class TankOpMode extends OpMode{
             tank.reverse();
         }
         if(this.gamepad1.dpad_down && !this.gamepad1.dpad_up){
-            float speed = tank.getSpeedVariable();
-
-            speed = Math.max(0.5f, speed-0.1f);
-
-            tank.setSpeedVariable(speed);
-        }
-
-        if(this.gamepad1.dpad_up && !this.gamepad1.dpad_down){
-            float speed = tank.getSpeedVariable();
-
-            speed = Math.min(1f, speed+0.1f);
-
-            tank.setSpeedVariable(speed);
+            winchMotor.setPower(-1);
+        }else if(this.gamepad1.dpad_up && !this.gamepad1.dpad_down){
+            winchMotor.setPower(1);
+        }else{
+            winchMotor.setPower(0);
         }
 
         System.out.println("Speed: " + tank.getSpeedVariable());
