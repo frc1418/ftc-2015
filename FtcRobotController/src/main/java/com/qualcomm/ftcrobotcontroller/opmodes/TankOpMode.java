@@ -11,6 +11,8 @@ public class TankOpMode extends OpMode{
     DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
 
+    NormalServo winchServo;
+
     DcMotor winchMotor;
 
     TankDrive tank;
@@ -30,6 +32,9 @@ public class TankOpMode extends OpMode{
 
         winchMotor = hardwareMap.dcMotor.get("winch_motor");
 
+        winchServo = new NormalServo(hardwareMap.servoController.get("servo_cnrtl"), 1);
+        components.add(winchServo);
+
         tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);
     }
@@ -39,18 +44,31 @@ public class TankOpMode extends OpMode{
         if(this.gamepad1.a){
             tank.reverse();
         }
-        if(this.gamepad1.dpad_down && !this.gamepad1.dpad_up){
-            winchMotor.setPower(-1);
-        }else if(this.gamepad1.dpad_up && !this.gamepad1.dpad_down){
-            winchMotor.setPower(1);
-        }else{
-            winchMotor.setPower(0);
-        }
 
         System.out.println("Speed: " + tank.getSpeedVariable());
         telemetry.addData("Speed", tank.getSpeedVariable());
 
         tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
+
+        if(this.gamepad1.dpad_down && !this.gamepad1.dpad_up){
+            winchServo.increase();
+        }else if(this.gamepad1.dpad_up && !this.gamepad1.dpad_down){
+            winchServo.decrease();
+        }
+
+        if(this.gamepad1.dpad_left && !this.gamepad1.dpad_right){
+            if(gamepad1.x){
+                tank.move(0.4f, 0.4f);
+            }
+            winchMotor.setPower(-1);
+        }else if(this.gamepad1.dpad_right && !this.gamepad1.dpad_left){
+            if(gamepad1.x){
+                tank.move(-0.4f, -0.4f);
+            }
+            winchMotor.setPower(1);
+        }else {
+            winchMotor.setPower(0);
+        }
 
 
         for(int i=0; i< components.size(); i++){
