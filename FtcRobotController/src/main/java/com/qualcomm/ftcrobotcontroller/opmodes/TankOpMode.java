@@ -45,8 +45,7 @@ public class TankOpMode extends OpMode{
             tank.reverse();
         }
 
-        System.out.println("Speed: " + tank.getSpeedVariable());
-        telemetry.addData("Speed", tank.getSpeedVariable());
+
 
         tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
@@ -72,8 +71,10 @@ public class TankOpMode extends OpMode{
 
 
         for(int i=0; i< components.size(); i++){
-            System.out.println();
             components.get(i).doit();
         }
-    }
+
+        telemetry.addData("Speed", tank.getSpeedVariable());
+        telemetry.addData("Winch Position", winchServo.location);
+}
 }
