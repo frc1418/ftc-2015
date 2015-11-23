@@ -45,7 +45,7 @@ public class TankOpMode extends OpMode{
 
     public void loop()
     {
-        if(this.gamepad1.a){
+        if(a.get()){
             tank.reverse();
         }
 
@@ -74,8 +74,8 @@ public class TankOpMode extends OpMode{
         }
 
 
-        for(int i=0; i< components.size(); i++){
-            components.get(i).doit();
+        for(Component component : components){
+            component.doit();
         }
 
         telemetry.addData("Speed", tank.getSpeedVariable());
