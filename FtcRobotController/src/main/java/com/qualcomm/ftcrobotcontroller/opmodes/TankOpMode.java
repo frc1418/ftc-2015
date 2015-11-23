@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.components.DebounceButton;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,6 +17,7 @@ public class TankOpMode extends OpMode{
     DcMotor winchMotor;
 
     TankDrive tank;
+    DebounceButton a;
 
     List<Component> components = new ArrayList<Component>();
 
@@ -34,6 +36,8 @@ public class TankOpMode extends OpMode{
 
         winchServo = new NormalServo(hardwareMap.servoController.get("servo_cnrtl"), 1);
         components.add(winchServo);
+
+        a = new DebounceButton(this.gamepad1.a);
 
         tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);

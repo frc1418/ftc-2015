@@ -40,7 +40,13 @@ public class StatefulAutonomous {
             startTime = System.currentTimeMillis();
             endTime = startTime+durations.get(0);
         }
-        runState(endTime);
+        if(! states.isEmpty())
+            runState(endTime);
+        else
+        {
+            initial_call = false;
+            stateRan = true;
+        }
     }
 
     public void runState(double endTime) {
@@ -53,9 +59,9 @@ public class StatefulAutonomous {
             try {
                 states.get(0).invoke(getClass());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                states.clear();
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                states.clear();
             }
 
         }
