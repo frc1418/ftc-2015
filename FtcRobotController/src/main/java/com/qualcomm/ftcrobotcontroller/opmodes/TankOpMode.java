@@ -45,7 +45,7 @@ public class TankOpMode extends OpMode{
 
     public void loop()
     {
-        if(this.gamepad1.a){
+        if(a.get()){
             tank.reverse();
         }
 
