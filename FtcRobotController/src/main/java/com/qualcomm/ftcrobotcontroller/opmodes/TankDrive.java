@@ -44,6 +44,11 @@ public class TankDrive implements Component
         reverse = !reverse;
     }
 
+    public boolean isReverse()
+    {
+        return reverse;
+    }
+
     public float getSpeedVariable()
     {
         return speedVariable;
