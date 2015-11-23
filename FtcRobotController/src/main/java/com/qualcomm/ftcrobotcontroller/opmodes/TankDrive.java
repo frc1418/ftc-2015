@@ -3,7 +3,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class TankDrive implements Component{
+public class TankDrive implements Component
+{
 
     DcMotor[] leftMotors;
     DcMotor[] rightMotors;
@@ -15,7 +16,8 @@ public class TankDrive implements Component{
     private float rightSpeed;
     private float leftSpeed;
 
-    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors){
+    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors)
+    {
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
 
@@ -23,39 +25,43 @@ public class TankDrive implements Component{
         this.rightSpeed = 0;
     }
 
-    public void move(float rightY, float leftY){
-
-        if(reverse){
-            float tmp = rightY;
-            rightY = leftY;
-            leftY = tmp;
-            rightY *= -1;
-            leftY *= -1;
-
+    public void move(float rightY, float leftY)
+    {
+        if (reverse)
+        {
+            leftSpeed = -(rightY * speedVariable);
+            rightSpeed = -(leftY * speedVariable);
         }
-
-        leftSpeed = (leftY*speedVariable);
-
-        rightSpeed = (rightY*speedVariable);
+        else
+        {
+            leftSpeed = (leftY * speedVariable);
+            rightSpeed = (rightY * speedVariable);
+        }
     }
 
-    public void reverse(){
+    public void reverse()
+    {
         reverse = !reverse;
     }
 
-    public float getSpeedVariable(){
+    public float getSpeedVariable()
+    {
         return speedVariable;
     }
 
-    public void setSpeedVariable(float speedVariable){
+    public void setSpeedVariable(float speedVariable)
+    {
         this.speedVariable = speedVariable;
     }
 
-    public void doit(){
-        for(DcMotor motor : leftMotors){
+    public void doit()
+    {
+        for (DcMotor motor : leftMotors)
+        {
             motor.setPower(leftSpeed);
         }
-        for(DcMotor motor : rightMotors){
+        for (DcMotor motor : rightMotors)
+        {
             motor.setPower(rightSpeed);
         }
     }
