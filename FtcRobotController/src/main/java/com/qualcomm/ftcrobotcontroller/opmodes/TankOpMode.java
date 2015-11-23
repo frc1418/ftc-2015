@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.components.DebounceButton;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -23,7 +22,6 @@ public class TankOpMode extends OpMode
     GyroSensor sensorGyro;
 
     TankDrive tank;
-    DebounceButton a;
 
     List<Component> components = new ArrayList<Component>();
 
@@ -47,15 +45,13 @@ public class TankOpMode extends OpMode
         rollerServo = hardwareMap.servo.get("roller");
         components.add(winchServo);
 
-        a = new DebounceButton(this.gamepad1.a);
-
         tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);
     }
 
     public void loop()
     {
-        if (a.get())
+        if (gamepad1.a)
         {
             tank.reverse();
         }
