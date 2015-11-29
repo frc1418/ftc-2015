@@ -1,10 +1,8 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +15,9 @@ public class TankOpMode extends OpMode
     NormalServo winchServo;
     DcMotor winchMotor;
 
-    GyroSensor sensorGyro;
 
     TankDrive tank;
+
 
     List<Component> components = new ArrayList<Component>();
 
@@ -49,6 +47,7 @@ public class TankOpMode extends OpMode
         {
             tank.reverse();
         }
+
 
 
         tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);

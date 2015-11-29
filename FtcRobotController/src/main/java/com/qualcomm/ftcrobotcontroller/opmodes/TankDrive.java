@@ -27,6 +27,7 @@ public class TankDrive implements Component
 
     public void move(float rightY, float leftY)
     {
+            //System.out.println("Right speed: "+rightY);
         if (reverse)
         {
             leftSpeed = -(rightY * speedVariable);
@@ -59,15 +60,21 @@ public class TankDrive implements Component
         this.speedVariable = speedVariable;
     }
 
+    public float getSpeed() {return rightSpeed;}
+
     public void doit()
     {
+
         for (DcMotor motor : leftMotors)
         {
+            System.out.println("AJDFJSLFDSJFDSFDSFSDFDSFDSFDSF");
             motor.setPower(leftSpeed);
         }
         for (DcMotor motor : rightMotors)
         {
             motor.setPower(rightSpeed);
         }
+        rightSpeed = 0;
+        leftSpeed = 0;
     }
 }
