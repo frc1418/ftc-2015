@@ -80,7 +80,7 @@ public class TankOpMode extends OpMode
             winchServo.decrease();
         }
 
-        if (this.gamepad1.dpad_left && !this.gamepad1.dpad_right)
+        if (!this.gamepad1.dpad_left && this.gamepad1.dpad_right)
         {
             if (gamepad1.x)
             {
@@ -88,11 +88,11 @@ public class TankOpMode extends OpMode
             }
             winchMotor.setPower(1);
         }
-        else if (this.gamepad1.dpad_right && !this.gamepad1.dpad_left)
+        else if (!this.gamepad1.dpad_right && this.gamepad1.dpad_left)
         {
             if (gamepad1.x)
             {
-                tank.move(-0.4f, -0.4f);
+                tank.move(0.4f, 0.4f);
             }
             winchMotor.setPower(-1);
         }
@@ -102,10 +102,12 @@ public class TankOpMode extends OpMode
         }
 
         if(gamepad1.left_bumper) {
-            leftEar.increase();
+            leftEar.setLocation(0.25);
         }else{
-            leftEar.decrease();
+            leftEar.increase();
         }
+
+        telemetry.addData("Ear POS: ", leftEar.location);
 
         /*UN ATTACHED
         if(gamepad1.right_bumper) {
