@@ -36,11 +36,11 @@ public class TankOpMode extends OpMode
         rightMotors[1] = hardwareMap.dcMotor.get("motor_4");
 
 
-        leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
-        leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
+        rightMotors[0].setDirection(DcMotor.Direction.REVERSE);
+        rightMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
 
-        tank = new TankDrive(leftMotors, rightMotors);
+        tank = new TankDrive(rightMotors, leftMotors);
         components.add(tank);
 
 
@@ -102,12 +102,10 @@ public class TankOpMode extends OpMode
         }
 
         if(gamepad1.left_bumper) {
-            leftEar.setLocation(0.25);
+            leftEar.setLocation(0.3);
         }else{
             leftEar.increase();
         }
-
-        telemetry.addData("Ear POS: ", leftEar.location);
 
         /*UN ATTACHED
         if(gamepad1.right_bumper) {
