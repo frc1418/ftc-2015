@@ -27,6 +27,14 @@ public class NormalServo implements Component{
         location-=.01;
     }
 
+    public void setLocation(double location){
+        this.location = location;
+    }
+
+    public double getLocation(){
+        return location;
+    }
+
     public void doit()
     {
         System.out.println(location);
