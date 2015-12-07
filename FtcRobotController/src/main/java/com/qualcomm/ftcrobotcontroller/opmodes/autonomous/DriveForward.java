@@ -9,10 +9,9 @@ import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.timed_state;
 public class DriveForward extends StatefulAutonomous {
 
     @timed_state(duration = 1)
-    public void driveForward()
+    public void forwardDrive()
     {
         tank.move(1,1);
-
     }
     @timed_state(duration = 1)
     public void driveBackward()
