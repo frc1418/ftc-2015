@@ -1,8 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 
+import com.qualcomm.ftcrobotcontroller.opmodes.components.TankDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.ServoController;
 
 import java.util.ArrayList;
@@ -10,6 +13,9 @@ import java.util.List;
 
 public class TankOpMode extends OpMode
 {
+
+    GyroSensor gyro;
+    ColorSensor rgb;
     DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
 
@@ -23,7 +29,6 @@ public class TankOpMode extends OpMode
 
 
     TankDrive tank;
-
 
     List<Component> components = new ArrayList<Component>();
 
@@ -59,6 +64,20 @@ public class TankOpMode extends OpMode
         rightEar = new NormalServo(servoController, 3);
         components.add(rightEar);
         */
+
+        rgb = hardwareMap.colorSensor.get("rgb");
+        rgb.enableLed(true);
+
+        gyro = hardwareMap.gyroSensor.get("gyro");
+        gyro.calibrate();
+        while(gyro.isCalibrating())
+        {
+            try {
+                wait(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void loop()
@@ -122,7 +141,12 @@ public class TankOpMode extends OpMode
 
 
 
-        telemetry.addData("Winch Position", winchServo.location);
-        telemetry.addData("Reverse", tank.isReverse());
+        //telemetry.addData("Winch Position", winchServo.location);
+        //telemetry.addData("Reverse", tank.isReverse());
+        telemetry.addData("Gyro Heading", gyro.getHeading());
+        telemetry.addData("Color G: ", rgb.green());
+        telemetry.addData("Color R: ", rgb.red());
+        telemetry.addData("Color B: ", rgb.blue());
+        //telemetry.addData("Gyro Rotation", gyro.getRotation());
     }
 }
