@@ -5,15 +5,11 @@ package com.qualcomm.ftcrobotcontroller.opmodes.autonomous;
  */
 public class DriveForward extends StatefulAutonomous {
 
-    @timed_state(duration = 1)
-    public void forwardDrive()
+    @timed_state(duration = 120)
+    public void driveForward()
     {
-        tank.move(1,1);
-    }
-    @timed_state(duration = 1)
-    public void driveBackward()
-    {
-        tank.move(-1,-1);
+        telemetry.addData("GYRO: ", gyro.getHeading());
+        tank.angleRotation(0);
     }
 
 }

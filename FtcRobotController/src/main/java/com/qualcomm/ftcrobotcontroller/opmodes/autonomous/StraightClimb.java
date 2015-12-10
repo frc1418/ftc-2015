@@ -4,9 +4,20 @@ package com.qualcomm.ftcrobotcontroller.opmodes.autonomous;
  * Created by winterst on 12/8/15.
  */
 public class StraightClimb extends StatefulAutonomous {
+    @timed_state(duration = 2.5)
+    public void aDriveForward()
+    {
+        tank.move(1, tank.angleRotation(0));
+    }
 
+    @timed_state(duration = 2)
+    public void bRotate()
+    {
+        tank.move(0, tank.angleRotation(315));
+    }
     @timed_state(duration = .5)
-    public void aSetServo() {
+    public void bSetServo() {
+        tank.move(1,tank.angleRotation(0));
         winchServo.setLocation(.05);
     }
 

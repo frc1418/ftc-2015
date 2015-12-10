@@ -41,6 +41,11 @@ public class StatefulAutonomous extends OpMode {
     List<Component> components = new ArrayList<Component>();
     GyroSensor gyro;
     public void init() {
+
+        gyro = hardwareMap.gyroSensor.get("gyro");
+        gyro.calibrate();
+
+
         leftMotors[0] = hardwareMap.dcMotor.get("motor_1");
         leftMotors[1] = hardwareMap.dcMotor.get("motor_2");
         rightMotors[0] = hardwareMap.dcMotor.get("motor_3");
@@ -65,8 +70,7 @@ public class StatefulAutonomous extends OpMode {
             System.out.println(states.toString());
         }
 
-        gyro = hardwareMap.gyroSensor.get("gyro");
-        gyro.calibrate();
+
 
 
 
@@ -83,6 +87,7 @@ public class StatefulAutonomous extends OpMode {
         if (!states.isEmpty()) {
             telemetry.addData("State", states.get(0).getName());
             telemetry.addData("Duration", durations.get(0));
+            telemetry.addData("speed", tank.getSpeed());
             runState(endTime);
         } else {
             initial_call = false;

@@ -19,6 +19,8 @@ public class TankDrive implements Component {
 
     GyroSensor gyro;
     double angle_constant = .040;
+    float rotation = 0.0f;
+
     public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors, GyroSensor gyro) {
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
@@ -29,35 +31,40 @@ public class TankDrive implements Component {
         this.gyro = gyro;
     }
 
-    public void move(float rightY, float leftY) {
-        //System.out.println("Right speed: "+rightY);
-        if (reverse) {
-            leftSpeed = -(rightY * speedVariable);
-            rightSpeed = -(leftY * speedVariable);
+    public void move(float moveValue, float rotateValue) {
+        if (moveValue > 0.0) {
+            if (rotateValue > 0.0) {
+
+                leftSpeed = moveValue - rotateValue;
+                rightSpeed = Math.max(moveValue, rotateValue);
+            } else {
+                leftSpeed = Math.max(moveValue, -rotateValue);
+                rightSpeed = moveValue + rotateValue;
+            }
         } else {
-            leftSpeed = (leftY * speedVariable);
-            rightSpeed = (rightY * speedVariable);
+            if (rotateValue > 0.0) {
+                leftSpeed = -Math.max(-moveValue, rotateValue);
+                rightSpeed = moveValue + rotateValue;
+            } else {
+                leftSpeed = moveValue - rotateValue;
+                rightSpeed = -Math.max(-moveValue, -rotateValue);
+            }
+
         }
     }
 
-    public void angleRotation(int target_angle) {
-        double rotation = 0.0;
+    public float angleRotation(int target_angle) {
+        float rotation = 0.0f;
         int angleOffset = target_angle - gyro.getHeading();
-
+        boolean invert = false;
+        if (target_angle > 180) {
+            target_angle -= 360;
+        }
         if (angleOffset < -1 || angleOffset > 1) {
-            rotation = angleOffset * angle_constant;
-            rotation = Math.max(Math.min(0.3, rotation), -0.3);
+            rotation = (float) (angleOffset * angle_constant);
+            rotation = (float) (Math.max(Math.min(0.3, rotation), -0.3));
         }
-        if(rotation > 0.0)
-        {
-            leftSpeed = (float) rotation/2;
-            rightSpeed = (float) (1-(rotation));
-        }
-        if(rotation < 0.0)
-        {
-            leftSpeed = (float) -rotation/2;
-            rightSpeed = (float) rotation/2;
-        }
+        return rotation;
 
     }
 
@@ -84,7 +91,6 @@ public class TankDrive implements Component {
     public void doit() {
 
         for (DcMotor motor : leftMotors) {
-            System.out.println("AJDFJSLFDSJFDSFDSFSDFDSFDSFDSF");
             motor.setPower(leftSpeed);
         }
         for (DcMotor motor : rightMotors) {
