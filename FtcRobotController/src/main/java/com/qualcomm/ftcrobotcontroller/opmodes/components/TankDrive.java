@@ -4,6 +4,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.Component;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.robocol.Telemetry;
 
 public class TankDrive implements Component {
 
@@ -14,14 +15,16 @@ public class TankDrive implements Component {
 
     private float speedVariable = 1;
 
-    private float rightSpeed;
-    private float leftSpeed;
+    public float rightSpeed;
+    public  float leftSpeed;
 
     GyroSensor gyro;
-    double angle_constant = .040;
-    float rotation = 0.0f;
+    double angle_constant = .04;
+    public float rotation = 0.0f;
+    public int target, heading;
 
-    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors, GyroSensor gyro) {
+    Telemetry telemetry;
+    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors, GyroSensor gyro, Telemetry telemetry) {
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
 
@@ -29,19 +32,45 @@ public class TankDrive implements Component {
         this.rightSpeed = 0;
 
         this.gyro = gyro;
+
+        this.telemetry = telemetry;
     }
+
+   /*public void move(float moveValue, float rotateValue) {
+        if (moveValue > 0.0) {
+            if (rotateValue > 0.0) {
+
+                leftSpeed = moveValue - rotateValue; //1-.6 = .6
+                rightSpeed = Math.max(moveValue, rotateValue); // 1,.3 = 1
+            } else {
+                leftSpeed = Math.max(moveValue, -rotateValue);//1, -.5 = 1
+                rightSpeed = moveValue + rotateValue; //1-.5 = .5
+            }
+        } else {
+            if (rotateValue > 0.0) {
+                leftSpeed = -Math.max(-moveValue, rotateValue); // 1, .5 = -1
+                rightSpeed = moveValue + rotateValue; // -1+.5 = -.5
+            } else {
+                leftSpeed = moveValue - rotateValue;
+                rightSpeed = -Math.max(-moveValue, -rotateValue);
+            }
+
+        }
+        telemetry.addData("Left Speed", rightSpeed);
+        telemetry.addData("Right Speed", leftSpeed);
+    }*/
 
     public void move(float moveValue, float rotateValue) {
         if (moveValue > 0.0) {
             if (rotateValue > 0.0) {
-
                 leftSpeed = moveValue - rotateValue;
                 rightSpeed = Math.max(moveValue, rotateValue);
             } else {
                 leftSpeed = Math.max(moveValue, -rotateValue);
                 rightSpeed = moveValue + rotateValue;
             }
-        } else {
+        }
+            else {
             if (rotateValue > 0.0) {
                 leftSpeed = -Math.max(-moveValue, rotateValue);
                 rightSpeed = moveValue + rotateValue;
@@ -49,24 +78,11 @@ public class TankDrive implements Component {
                 leftSpeed = moveValue - rotateValue;
                 rightSpeed = -Math.max(-moveValue, -rotateValue);
             }
-
         }
-    }
-
-    public float angleRotation(int target_angle) {
-        float rotation = 0.0f;
-        int angleOffset = target_angle - gyro.getHeading();
-        boolean invert = false;
-        if (target_angle > 180) {
-            target_angle -= 360;
+            telemetry.addData("Left Speed", rightSpeed);
+            telemetry.addData("Right Speed", leftSpeed);
         }
-        if (angleOffset < -1 || angleOffset > 1) {
-            rotation = (float) (angleOffset * angle_constant);
-            rotation = (float) (Math.max(Math.min(0.3, rotation), -0.3));
-        }
-        return rotation;
 
-    }
 
     public void reverse() {
         reverse = !reverse;

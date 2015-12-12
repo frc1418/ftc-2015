@@ -21,6 +21,8 @@ import java.util.List;
 @Retention(RetentionPolicy.RUNTIME)
 @interface timed_state {
     double duration();
+    String nextState() default "";
+    boolean first() default false;
 
 }
 
@@ -33,10 +35,11 @@ public class StatefulAutonomous extends OpMode {
     List<Double> durations = new ArrayList<Double>();
     public DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
-
     public TankDrive tank;
 
     NormalServo winchServo;
+    NormalServo leftEar;
+
     DcMotor winchMotor;
     List<Component> components = new ArrayList<Component>();
     GyroSensor gyro;
@@ -55,23 +58,45 @@ public class StatefulAutonomous extends OpMode {
         leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
         leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
+        tank = new TankDrive(rightMotors, leftMotors, gyro, telemetry);
+
         winchMotor = hardwareMap.dcMotor.get("winch_motor");
 
         winchServo = new NormalServo(hardwareMap.servoController.get("servo_cnrtl"), 1);
         components.add(winchServo);
 
-        tank = new TankDrive(rightMotors, leftMotors, gyro);
         components.add(tank);
 
-        for (Method method : getClass().getDeclaredMethods()) {
+        Method methods[] = getClass().getDeclaredMethods();
+        for (Method method : methods) {
             timed_state annotation = method.getAnnotation(timed_state.class);
-            states.add(method);
-            durations.add(annotation.duration());
-            System.out.println(states.toString());
+            if(annotation.first())
+            {
+                states.add(method);
+                durations.add(annotation.duration());
+                break;
+            }
         }
+        for(Method method: states)
+        {
+            timed_state annotation = method.getAnnotation(timed_state.class);
+            String next_state = annotation.nextState();
+            for(Method _method : methods)
+            {
+                timed_state _annotation = method.getAnnotation(timed_state.class);
+                if (_method.getName() == next_state && next_state!="")
+                {
 
+                    states.add(_method);
+                    durations.add(_annotation.duration());
+                }
+                else
+                {
+                    break;
+                }
 
-
+            }
+        }
 
 
     }
