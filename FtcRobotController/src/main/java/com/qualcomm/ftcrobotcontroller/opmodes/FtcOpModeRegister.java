@@ -31,7 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.CClimb;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.DriveForward;
+import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.LowZone;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.StraightClimb;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -59,5 +61,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("TankOpMode", TankOpMode.class);
     manager.register("DriveForward", DriveForward.class);
     manager.register("StraightClimb", StraightClimb.class);
+    manager.register("CClimb", CClimb.class);
+    manager.register("Low Zone", LowZone.class);
   }
 }
