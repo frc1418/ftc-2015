@@ -40,11 +40,11 @@ public class TankOpMode extends OpMode
         rightMotors[1] = hardwareMap.dcMotor.get("motor_4");
 
 
-        leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
-        leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
+        rightMotors[0].setDirection(DcMotor.Direction.REVERSE);
+        rightMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
 
-        tank = new TankDrive(leftMotors, rightMotors);
+        tank = new TankDrive(rightMotors, leftMotors);
         components.add(tank);
 
 
@@ -59,8 +59,10 @@ public class TankOpMode extends OpMode
         //DUMBO EARS
         leftEar = new NormalServo(servoController, 2);
         components.add(leftEar);
+        leftEar.setLocation(1);
         rightEar = new NormalServo(servoController, 6);
         components.add(rightEar);
+        rightEar.setLocation(-1);
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
@@ -136,7 +138,5 @@ public class TankOpMode extends OpMode
         telemetry.addData("Winch Position", winchServo.location);
         telemetry.addData("Reverse", tank.isReverse());
         telemetry.addData("Gyro Heading", gyro.getHeading());
-        //telemetry.addData("");
-        //telemetry.addData("Gyro Rotation", gyro.getRotation());
     }
 }
