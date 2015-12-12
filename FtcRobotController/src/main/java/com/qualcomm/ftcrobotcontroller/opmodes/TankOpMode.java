@@ -15,7 +15,6 @@ public class TankOpMode extends OpMode
 {
 
     GyroSensor gyro;
-    ColorSensor rgb;
     DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
 
@@ -34,6 +33,9 @@ public class TankOpMode extends OpMode
 
     public void init()
     {
+        gyro = hardwareMap.gyroSensor.get("gyro");
+        gyro.calibrate();
+
         //DRIVING
         leftMotors[0] = hardwareMap.dcMotor.get("motor_1");
         leftMotors[1] = hardwareMap.dcMotor.get("motor_2");
@@ -41,11 +43,10 @@ public class TankOpMode extends OpMode
         rightMotors[1] = hardwareMap.dcMotor.get("motor_4");
 
 
-        rightMotors[0].setDirection(DcMotor.Direction.REVERSE);
-        rightMotors[1].setDirection(DcMotor.Direction.REVERSE);
+        leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
+        leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
-
-        tank = new TankDrive(rightMotors, leftMotors);
+        tank = new TankDrive(rightMotors, leftMotors, gyro, telemetry   );
         components.add(tank);
 
 
@@ -59,17 +60,14 @@ public class TankOpMode extends OpMode
 
         //DUMBO EARS
         leftEar = new NormalServo(servoController, 2);
+        leftEar.setLocation(1);
         components.add(leftEar);
         /*UNATTACHED
         rightEar = new NormalServo(servoController, 3);
         components.add(rightEar);
         */
 
-        rgb = hardwareMap.colorSensor.get("rgb");
-        rgb.enableLed(true);
 
-        gyro = hardwareMap.gyroSensor.get("gyro");
-        gyro.calibrate();
         while(gyro.isCalibrating())
         {
             try {
@@ -89,21 +87,21 @@ public class TankOpMode extends OpMode
         }
 
         //DRIVE
-        tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
+        tank.move(-gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         //WINCH
         if (this.gamepad1.dpad_down && !this.gamepad1.dpad_up){
-            winchServo.increase();
+            winchServo.decrease();
         }
         else if (this.gamepad1.dpad_up && !this.gamepad1.dpad_down) {
-            winchServo.decrease();
+            winchServo.increase();
         }
 
         if (!this.gamepad1.dpad_left && this.gamepad1.dpad_right)
         {
             if (gamepad1.x)
             {
-                tank.move(0.4f, 0.4f);
+                tank.move(0.4f, 0);
             }
             winchMotor.setPower(1);
         }
@@ -111,7 +109,7 @@ public class TankOpMode extends OpMode
         {
             if (gamepad1.x)
             {
-                tank.move(0.4f, 0.4f);
+                tank.move(0.4f, 0);
             }
             winchMotor.setPower(-1);
         }
@@ -121,7 +119,7 @@ public class TankOpMode extends OpMode
         }
 
         if(gamepad1.left_bumper) {
-            leftEar.setLocation(0.3);
+            leftEar.decrease();
         }else{
             leftEar.increase();
         }
@@ -141,12 +139,9 @@ public class TankOpMode extends OpMode
 
 
 
-        //telemetry.addData("Winch Position", winchServo.location);
+        telemetry.addData("Winch Position", winchServo.location);
         //telemetry.addData("Reverse", tank.isReverse());
         telemetry.addData("Gyro Heading", gyro.getHeading());
-        telemetry.addData("Color G: ", rgb.green());
-        telemetry.addData("Color R: ", rgb.red());
-        telemetry.addData("Color B: ", rgb.blue());
         //telemetry.addData("Gyro Rotation", gyro.getRotation());
     }
 }

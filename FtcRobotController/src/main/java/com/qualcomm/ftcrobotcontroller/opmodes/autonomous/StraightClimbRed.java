@@ -3,7 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.autonomous;
 /**
  * Created by winterst on 12/8/15.
  */
-public class StraightClimb extends StatefulAutonomous {
+public class StraightClimbRed extends StatefulAutonomous {
     @timed_state(duration = 4.6, nextState = "rotate", first = true)
     public void DriveForward()
     {
@@ -14,7 +14,7 @@ public class StraightClimb extends StatefulAutonomous {
     @timed_state(duration = 4, nextState = "setServo")
     public void rotate()
     {
-        tank.angleRotation(315);
+        tank.angleRotation(45);
     }
     @timed_state(duration = .5, nextState = "extendServo")
     public void setServo() {
@@ -23,7 +23,7 @@ public class StraightClimb extends StatefulAutonomous {
     @timed_state(duration = 6.6, nextState = "lowerServo")
     public void extendServo() {
         winchMotor.setPower(1);
-        tank.move(.3f,0);
+        tank.move(.3f, 0);
     }
 
     @timed_state(duration = .5, nextState = "startClimb")
