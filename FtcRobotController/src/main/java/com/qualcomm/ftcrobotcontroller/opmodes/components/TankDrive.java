@@ -83,6 +83,19 @@ public class TankDrive implements Component {
             telemetry.addData("Right Speed", leftSpeed);
         }
 
+    public float angleRotation(int target_angle) {
+        int angleOffset = target_angle > gyro.getHeading() ? target_angle - gyro.getHeading() : gyro.getHeading() - target_angle;
+        angleOffset%=360;
+        angleOffset = angleOffset > 180 ? 180 - angleOffset : angleOffset;
+        if (gyro.getHeading() + angleOffset != target_angle)
+            angleOffset*=-1;
+        if (angleOffset < -1 || angleOffset > 1) {
+            rotation = (float) (angleOffset * angle_constant);
+            rotation = (float) (Math.max(Math.min(0.3, rotation), -0.3));
+        }
+        return rotation;
+
+    }
 
     public void reverse() {
         reverse = !reverse;
