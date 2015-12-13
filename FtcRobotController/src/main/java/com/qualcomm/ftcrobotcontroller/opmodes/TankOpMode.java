@@ -97,6 +97,10 @@ public class TankOpMode extends OpMode
 
         if (!this.gamepad1.dpad_left && this.gamepad1.dpad_right)
         {
+            if (gamepad1.y)
+            {
+                tank.move(0.1f, 0.1f);
+            }
             if (gamepad1.x)
             {
                 tank.move(0.4f, 0.4f);
@@ -105,9 +109,13 @@ public class TankOpMode extends OpMode
         }
         else if (!this.gamepad1.dpad_right && this.gamepad1.dpad_left)
         {
+            if (gamepad1.y)
+            {
+                tank.move(-0.1f, -0.1f);
+            }
             if (gamepad1.x)
             {
-                tank.move(0.4f, 0.4f);
+                tank.move(-0.4f, -0.4f);
             }
             winchMotor.setPower(-1);
         }
@@ -116,13 +124,13 @@ public class TankOpMode extends OpMode
             winchMotor.setPower(0);
         }
 
-        if(gamepad1.left_bumper) {
+        if(gamepad1.left_bumper || gamepad2.left_bumper) {
             leftEar.decrease();
         }else{
             leftEar.increase();
         }
 
-        if(gamepad1.right_bumper) {
+        if(gamepad1.right_bumper || gamepad2.right_bumper) {
             rightEar.increase();
         }else{
             rightEar.decrease();

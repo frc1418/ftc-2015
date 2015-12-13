@@ -4,17 +4,17 @@ package com.qualcomm.ftcrobotcontroller.opmodes.autonomous;
  * Created by fendleyc on 12/11/15.
  */
 public class CClimbBlue extends StatefulAutonomous {
-    @timed_state(duration = 5.25)
+    @timed_state(duration = 5.05)
     public void aDriveToRamp(){
         tank.move(-0.25f,-0.25f);
     }
 
-    @timed_state(duration = 0.5)
+    @timed_state(duration = 0.8)
     public void bDriveToRamp(){
-        tank.move(0.75f,0.75f);
+        tank.move(0.65f,0.65f);
     }
 
-    @timed_state(duration = 1.15)
+    @timed_state(duration = 1.05)
     public void cSpinToRamp(){
         tank.move(-1, 1);
     }
