@@ -6,6 +6,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.components.TankDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,6 +35,11 @@ public class StatefulAutonomous extends OpMode {
     public DcMotor[] rightMotors = new DcMotor[2];
     DcMotor[] leftMotors = new DcMotor[2];
 
+    ServoController servoController;
+
+    NormalServo leftEar;
+    NormalServo rightEar;
+
     public TankDrive tank;
 
     NormalServo winchServo;
@@ -50,12 +56,21 @@ public class StatefulAutonomous extends OpMode {
         leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
         leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
+        //SERVO CONTROLLER
+        servoController = hardwareMap.servoController.get("servo_cnrtl");
+
+        //DUMBO EARS
+        leftEar = new NormalServo(servoController, 2);
+        components.add(leftEar);
+        rightEar = new NormalServo(servoController, 6);
+        components.add(rightEar);
+
         winchMotor = hardwareMap.dcMotor.get("winch_motor");
 
         winchServo = new NormalServo(hardwareMap.servoController.get("servo_cnrtl"), 1);
         components.add(winchServo);
 
-        tank = new TankDrive(rightMotors, leftMotors, gyro);
+        tank = new TankDrive(rightMotors, leftMotors);
         components.add(tank);
 
         for (Method method : getClass().getDeclaredMethods()) {
@@ -68,7 +83,8 @@ public class StatefulAutonomous extends OpMode {
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
 
-
+        leftEar.setLocation(1);
+        rightEar.setLocation(-1);
 
     }
 
