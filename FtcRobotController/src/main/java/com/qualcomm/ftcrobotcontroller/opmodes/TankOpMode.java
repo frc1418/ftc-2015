@@ -14,22 +14,22 @@ import java.util.List;
 public class TankOpMode extends OpMode
 {
 
-    GyroSensor gyro;
-    DcMotor[] rightMotors = new DcMotor[2];
-    DcMotor[] leftMotors = new DcMotor[2];
+    public GyroSensor gyro;
+    public DcMotor[] rightMotors = new DcMotor[2];
+    public DcMotor[] leftMotors = new DcMotor[2];
 
-    ServoController servoController;
+    public ServoController servoController;
 
-    NormalServo winchServo;
-    DcMotor winchMotor;
+    public NormalServo winchServo;
+    public DcMotor winchMotor;
 
-    NormalServo leftEar;
-    NormalServo rightEar;
+    public NormalServo leftEar;
+    public NormalServo rightEar;
 
 
-    TankDrive tank;
+    public TankDrive tank;
 
-    List<Component> components = new ArrayList<Component>();
+    public List<Component> components = new ArrayList<Component>();
 
     public void init()
     {
@@ -40,11 +40,11 @@ public class TankOpMode extends OpMode
         rightMotors[1] = hardwareMap.dcMotor.get("motor_4");
 
 
-        rightMotors[0].setDirection(DcMotor.Direction.REVERSE);
-        rightMotors[1].setDirection(DcMotor.Direction.REVERSE);
+        leftMotors[0].setDirection(DcMotor.Direction.REVERSE);
+        leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
 
-        tank = new TankDrive(rightMotors, leftMotors);
+        tank = new TankDrive(leftMotors, rightMotors);
         components.add(tank);
 
 
@@ -85,7 +85,7 @@ public class TankOpMode extends OpMode
         }
 
         //DRIVE
-        tank.move(gamepad1.left_stick_y, gamepad1.right_stick_y);
+        tank.move(-1*gamepad1.left_stick_y, -1*gamepad1.right_stick_y);
 
         //WINCH
         if (this.gamepad1.dpad_down && !this.gamepad1.dpad_up){

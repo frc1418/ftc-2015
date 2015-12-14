@@ -26,7 +26,7 @@ public class TankDrive implements Component {
         this.rightSpeed = 0;
     }
 
-    public void move(float rightY, float leftY) {
+    public void move(float leftY, float rightY) {
         //System.out.println("Right speed: "+rightY);
         if (reverse) {
             leftSpeed = -(rightY * speedVariable);
