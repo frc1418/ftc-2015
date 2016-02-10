@@ -1,20 +1,13 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.autonomous;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.Component;
-import com.qualcomm.ftcrobotcontroller.opmodes.NormalServo;
 import com.qualcomm.ftcrobotcontroller.opmodes.TankOpMode;
-import com.qualcomm.ftcrobotcontroller.opmodes.components.TankDrive;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +16,8 @@ import java.util.List;
 @Retention(RetentionPolicy.RUNTIME)
 @interface timed_state {
     double duration();
+    String next_state() default "";
+    boolean first() default false;
 
 }
 
@@ -37,13 +32,29 @@ public class StatefulAutonomous extends TankOpMode {
     @Override
     public void init() {
         super.init();
+        boolean hasFirst = false;
+        try {
+            for (Method method : getClass().getDeclaredMethods()) {
+                timed_state annotation = method.getAnnotation(timed_state.class);
+                if (annotation.first())
+                    if (hasFirst)
+                        throw new RuntimeException("Two first autonomous states declared");
+                    createStateList(method);
+                hasFirst = true;
 
-        for (Method method : getClass().getDeclaredMethods()) {
-            timed_state annotation = method.getAnnotation(timed_state.class);
-            states.add(method);
-            durations.add(annotation.duration());
-            System.out.println(states.toString());
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
+
+    }
+
+    public void createStateList(Method state) throws NoSuchMethodException {
+        timed_state annotation = state.getAnnotation(timed_state.class);
+        if (annotation.next_state() != "")
+            createStateList(getClass().getDeclaredMethod(annotation.next_state()));
+        states.add(state);
+        durations.add(annotation.duration());
 
     }
 
@@ -70,7 +81,6 @@ public class StatefulAutonomous extends TankOpMode {
             component.doit();
         }
     }
-
     public void runState(double endTime) {
         if (System.currentTimeMillis() >= endTime) {
             states.remove(0);
