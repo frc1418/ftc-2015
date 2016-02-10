@@ -41,6 +41,7 @@ public class StatefulAutonomous extends TankOpMode {
                         throw new RuntimeException("Two first autonomous states declared");
                     createStateList(method);
                 hasFirst = true;
+                break;
 
             }
         } catch (NoSuchMethodException e) {
