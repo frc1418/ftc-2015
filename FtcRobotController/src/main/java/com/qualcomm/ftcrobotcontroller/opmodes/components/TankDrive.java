@@ -17,19 +17,22 @@ public class TankDrive implements Component {
     private float rightSpeed;
     private float leftSpeed;
 
-    GyroSensor gyro;
     double angle_constant = .040;
+
+    GyroSensor gyro;
+
+    float rotation;
     public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors, GyroSensor gyro) {
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
 
+        this.gyro = gyro;
+
         this.leftSpeed = 0;
         this.rightSpeed = 0;
-
-        this.gyro = gyro;
     }
 
-    public void move(float rightY, float leftY) {
+    public void move(float leftY, float rightY) {
         //System.out.println("Right speed: "+rightY);
         if (reverse) {
             leftSpeed = -(rightY * speedVariable);
@@ -40,25 +43,26 @@ public class TankDrive implements Component {
         }
     }
 
-    public void angleRotation(int target_angle) {
-        double rotation = 0.0;
-        int angleOffset = target_angle - gyro.getHeading();
+    public boolean angleRotation(int target_angle)
+    {
+        float angleOffset = target_angle - getGyroAngle();
 
         if (angleOffset < -1 || angleOffset > 1) {
-            rotation = angleOffset * angle_constant;
-            rotation = Math.max(Math.min(0.3, rotation), -0.3);
-        }
-        if(rotation > 0.0)
-        {
-            leftSpeed = (float) rotation/2;
-            rightSpeed = (float) (1-(rotation));
-        }
-        if(rotation < 0.0)
-        {
-            leftSpeed = (float) -rotation/2;
-            rightSpeed = (float) rotation/2;
+            rotation = angleOffset * .04f;
+            rotation = Math.max(Math.min(.8f, rotation), -.8f);
+            this.leftSpeed = rotation;
+            this.rightSpeed = -rotation;
+            return false;
         }
 
+        return true;
+
+
+    }
+
+    public int getGyroAngle()
+    {
+        return gyro.getHeading() <= 180 ? gyro.getHeading() : gyro.getHeading() - 360;
     }
 
     public void reverse() {
@@ -84,7 +88,6 @@ public class TankDrive implements Component {
     public void doit() {
 
         for (DcMotor motor : leftMotors) {
-            System.out.println("AJDFJSLFDSJFDSFDSFSDFDSFDSFDSF");
             motor.setPower(leftSpeed);
         }
         for (DcMotor motor : rightMotors) {
