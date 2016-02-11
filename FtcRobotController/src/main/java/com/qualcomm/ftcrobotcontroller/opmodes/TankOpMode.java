@@ -26,7 +26,7 @@ public class TankOpMode extends OpMode
     public NormalServo leftEar;
     public NormalServo rightEar;
 
-
+    public ColorSensor colorSensor;
     public TankDrive tank;
 
     public List<Component> components = new ArrayList<Component>();
@@ -44,8 +44,7 @@ public class TankOpMode extends OpMode
         leftMotors[1].setDirection(DcMotor.Direction.REVERSE);
 
 
-        tank = new TankDrive(leftMotors, rightMotors);
-        components.add(tank);
+        //tank = new TankDrive(leftMotors, rightMotors);
 
 
         //SERVO CONTROLLER
@@ -66,6 +65,12 @@ public class TankOpMode extends OpMode
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
+
+        tank = new TankDrive(leftMotors, rightMotors, gyro);
+        components.add(tank);
+
+        colorSensor = hardwareMap.colorSensor.get("color");
+        colorSensor.enableLed(true);
         while(gyro.isCalibrating())
         {
             try {
@@ -99,11 +104,11 @@ public class TankOpMode extends OpMode
         {
             if (gamepad1.y)
             {
-                tank.move(0.1f, 0.1f);
+                tank.move(-0.1f, -0.1f);
             }
             if (gamepad1.x)
             {
-                tank.move(0.4f, 0.4f);
+                tank.move(-0.4f, -0.4f);
             }
             winchMotor.setPower(1);
         }
@@ -111,11 +116,11 @@ public class TankOpMode extends OpMode
         {
             if (gamepad1.y)
             {
-                tank.move(-0.1f, -0.1f);
+                tank.move(0.1f, 0.1f);
             }
             if (gamepad1.x)
             {
-                tank.move(-0.4f, -0.4f);
+                tank.move(0.4f, 0.4f);
             }
             winchMotor.setPower(-1);
         }
@@ -136,6 +141,12 @@ public class TankOpMode extends OpMode
             rightEar.decrease();
         }
 
+
+        if (gamepad1.b)
+        {
+            tank.angleRotation(90);
+        }
+
         for (Component component : components)
         {
             component.doit();
@@ -143,8 +154,13 @@ public class TankOpMode extends OpMode
 
 
 
+
+
         telemetry.addData("Winch Position", winchServo.location);
         telemetry.addData("Reverse", tank.isReverse());
         telemetry.addData("Gyro Heading", gyro.getHeading());
+        telemetry.addData("Red", colorSensor.red());
+        telemetry.addData("Blue", colorSensor.blue());
+        telemetry.addData("Green", colorSensor.green());
     }
 }

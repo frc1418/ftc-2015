@@ -10,14 +10,14 @@ public class LowZoneBlue extends StatefulAutonomous {
         tank.move(-0.25f, -0.25f);
     }
 
-    @timed_state(duration = 0.85, next_state = "SpinToRamp")
+    @timed_state(duration = 0.7, next_state = "SpinToRamp")
     public void DriveToRamp(){
         tank.move(0.65f, 0.66f);
     }
 
-    @timed_state(duration = 1.05, next_state = "DriveUp")
+    @timed_state(duration = 2, next_state = "DriveUp")
     public void SpinToRamp(){
-        tank.move(-1, 1);
+        tank.angleRotation(90);
     }
 
     @timed_state(duration = 6)

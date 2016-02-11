@@ -26,36 +26,21 @@ public class StatefulAutonomous extends TankOpMode {
     boolean initial_call = !stateRan;
     double startTime;
     double endTime;
-    List<Method> states = new ArrayList<Method>();
-    List<Double> durations = new ArrayList<Double>();
-
+    Method state;
     @Override
     public void init() {
         super.init();
         boolean hasFirst = false;
-        try {
-            for (Method method : getClass().getDeclaredMethods()) {
-                timed_state annotation = method.getAnnotation(timed_state.class);
-                if (annotation.first())
-                    if (hasFirst)
-                        throw new RuntimeException("Two first autonomous states declared");
-                    createStateList(method);
-                hasFirst = true;
-                break;
+        for (Method method : getClass().getDeclaredMethods()) {
+            timed_state annotation = method.getAnnotation(timed_state.class);
+            if (annotation.first())
+                if (hasFirst)
+                    throw new RuntimeException("Two first autonomous states declared");
+                state = method;
+            hasFirst = true;
+            break;
 
-            }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
         }
-
-    }
-
-    public void createStateList(Method state) throws NoSuchMethodException {
-        timed_state annotation = state.getAnnotation(timed_state.class);
-        if (annotation.next_state() != "")
-            createStateList(getClass().getDeclaredMethod(annotation.next_state()));
-        states.add(state);
-        durations.add(annotation.duration());
 
     }
 
@@ -63,15 +48,19 @@ public class StatefulAutonomous extends TankOpMode {
     public void loop() {
 
         initial_call = !stateRan;
-        if (initial_call && !states.isEmpty()) {
+        if (initial_call && state != null) {
             stateRan = true;
             startTime = System.currentTimeMillis();
-            endTime = startTime + (durations.get(0)*1000);
+            endTime = startTime + (state.getAnnotation(timed_state.class).duration()*1000);
         }
-        if (!states.isEmpty()) {
-            telemetry.addData("State", states.get(0).getName());
-            telemetry.addData("Duration", durations.get(0));
-            runState(endTime);
+        if (state != null) {
+            telemetry.addData("State", state.getName());
+            telemetry.addData("Duration", state.getAnnotation(timed_state.class).duration());
+            try {
+                runState(endTime);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         } else {
             initial_call = false;
             stateRan = true;
@@ -82,14 +71,13 @@ public class StatefulAutonomous extends TankOpMode {
             component.doit();
         }
     }
-    public void runState(double endTime) {
+    public void runState(double endTime) throws NoSuchMethodException {
         if (System.currentTimeMillis() >= endTime) {
-            states.remove(0);
-            durations.remove(0);
             stateRan = false;
+            next_state(state.getAnnotation(timed_state.class).next_state());
         } else {
             try {
-                states.get(0).invoke(this);
+                state.invoke(this);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException();
             } catch (InvocationTargetException e) {
@@ -98,6 +86,12 @@ public class StatefulAutonomous extends TankOpMode {
             }
 
         }
+    }
+
+    public void next_state(String next_state) throws NoSuchMethodException {
+        state = getClass().getDeclaredMethod(next_state);
+        stateRan = false;
+
     }
 }
 

@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.CClimb;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.CClimbBlue;
+import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.ColorAuto;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.DriveForward;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.LowZone;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.LowZoneBlue;
@@ -61,11 +62,12 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
     manager.register("TankOpMode", TankOpMode.class);
-    manager.register("DriveForward", DriveForward.class);
-    manager.register("StraightClimb", StraightClimb.class);
-    manager.register("CClimb", CClimb.class);
-    manager.register("CClimbBlue", CClimbBlue.class);
-    manager.register("Low Zone", LowZone.class);
+    //manager.register("DriveForward", DriveForward.class);
+    //manager.register("StraightClimb", StraightClimb.class);
+    //manager.register("CClimb", CClimb.class);
+    //manager.register("CClimbBlue", CClimbBlue.class);
+    //manager.register("Low Zone", LowZone.class);
     manager.register("Low Zone Blue", LowZoneBlue.class);
+    manager.register("Color Climb", ColorAuto.class);
   }
 }

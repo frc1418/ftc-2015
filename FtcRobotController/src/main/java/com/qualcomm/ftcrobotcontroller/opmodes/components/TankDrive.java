@@ -18,9 +18,15 @@ public class TankDrive implements Component {
     private float leftSpeed;
 
     double angle_constant = .040;
-    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors) {
+
+    GyroSensor gyro;
+
+    float rotation;
+    public TankDrive(DcMotor[] leftMotors, DcMotor[] rightMotors, GyroSensor gyro) {
         this.leftMotors = leftMotors;
         this.rightMotors = rightMotors;
+
+        this.gyro = gyro;
 
         this.leftSpeed = 0;
         this.rightSpeed = 0;
@@ -35,6 +41,28 @@ public class TankDrive implements Component {
             leftSpeed = (leftY * speedVariable);
             rightSpeed = (rightY * speedVariable);
         }
+    }
+
+    public boolean angleRotation(int target_angle)
+    {
+        float angleOffset = target_angle - getGyroAngle();
+
+        if (angleOffset < -1 || angleOffset > 1) {
+            rotation = angleOffset * .04f;
+            rotation = Math.max(Math.min(.8f, rotation), -.8f);
+            this.leftSpeed = rotation;
+            this.rightSpeed = -rotation;
+            return false;
+        }
+
+        return true;
+
+
+    }
+
+    public int getGyroAngle()
+    {
+        return gyro.getHeading() <= 180 ? gyro.getHeading() : gyro.getHeading() - 360;
     }
 
     public void reverse() {
