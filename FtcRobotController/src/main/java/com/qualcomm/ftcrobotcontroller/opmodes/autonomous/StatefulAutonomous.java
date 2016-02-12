@@ -33,12 +33,13 @@ public class StatefulAutonomous extends TankOpMode {
         boolean hasFirst = false;
         for (Method method : getClass().getDeclaredMethods()) {
             timed_state annotation = method.getAnnotation(timed_state.class);
-            if (annotation.first())
+            if (annotation.first()) {
                 if (hasFirst)
                     throw new RuntimeException("Two first autonomous states declared");
                 state = method;
-            hasFirst = true;
-            break;
+                hasFirst = true;
+                break;
+            }
 
         }
 

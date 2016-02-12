@@ -34,6 +34,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.CClimb;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.CClimbBlue;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.ColorAuto;
+import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.ColorLowZone;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.DriveForward;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.LowZone;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomous.LowZoneBlue;
@@ -69,5 +70,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Low Zone", LowZone.class);
     manager.register("Low Zone Blue", LowZoneBlue.class);
     manager.register("Color Climb", ColorAuto.class);
+    manager.register("ColorLowZone", ColorLowZone.class
+
+    );
   }
 }
